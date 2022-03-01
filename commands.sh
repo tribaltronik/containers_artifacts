@@ -11,10 +11,11 @@ az acr login --name registryhku7094
 # Build the app container
 cd src/poi
 docker build -t poi -f ..\..\dockerfiles\Dockerfile_3 .
+docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' poi
 
 # Create local SQL server container
 docker pull mcr.microsoft.com/mssql/server:2017-latest
-docker run --network bridge -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=MyStrongXYZPassw0rd123" -p 1433:1433 --name sql1 --hostname sql1 -d mcr.microsoft.com/mssql/server:2017-latest
+docker run -d --network bridge -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=MyStrongXYZPassw0rd123" -p 1433:1433 --name sql1 --hostname sql1 -d mcr.microsoft.com/mssql/server:2017-latest
 
 # Login to container
 docker exec -it sql1 /bin/bash
@@ -30,7 +31,11 @@ exit
 docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' sql1
 
 # Use the IP address to load the data into the DB
-docker run --network bridge -e SQLFQDN=172.17.0.3 -e SQLUSER=sa -e SQLPASS=MyStrongXYZPassw0rd123 -e SQLDB=mydrivingDB registryhku7094.azurecr.io/dataload:1.0
+docker run -d --name dataload --network bridge -e SQLFQDN=172.17.0.3 -e SQLUSER=sa -e SQLPASS=MyStrongXYZPassw0rd123 -e SQLDB=mydrivingDB registryhku7094.azurecr.io/dataload:1.0
 
 # Run the API container
-docker run --network bridge -e SQL_SERVER=172.17.0.3 -e SQL_USER=sa -e SQL_PASSWORD=MyStrongXYZPassw0rd123 -e SQL_DBNAME=mydrivingDB poi:latest
+docker run -d --name poi --network bridge -e SQL_SERVER=172.17.0.3 -e SQL_USER=sa -e SQL_PASSWORD=MyStrongXYZPassw0rd123 -e SQL_DBNAME=mydrivingDB poi:latest
+docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' poi
+
+# Check if the API works
+curl -i -X GET 'http://172.17.0.5:80'
