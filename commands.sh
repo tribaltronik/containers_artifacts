@@ -41,7 +41,12 @@ exit
 docker run -d --name dataload --network bridge -e SQLFQDN=localhost -e SQLUSER=sa -e SQLPASS=MyStrongXYZPassw0rd123 -e SQLDB=mydrivingDB registryhku7094.azurecr.io/dataload:1.0
 
 # Run the API container
-docker run -d -p 8080:80 --name poi --network bridge -e SQL_SERVER=localhost -e SQL_USER=sa -e SQL_PASSWORD=MyStrongXYZPassw0rd123 -e SQL_DBNAME=mydrivingDB poi:latest
+docker run -d -p 8080:80 --name poi --network bridge -e SQL_SERVER=localhost -e SQL_USER=sa -e SQL_PASSWORD=MyStrongXYZPassw0rd123 -e SQL_DBNAME=mydrivingDB poi:latest -e ASPNETCORE_ENVIRONMENT=local
 
 # Check if the API works
 curl -i -X GET 'http://localhost:8080/api/poi/healthcheck'
+
+# Push to the container registry
+docker tag poi registryhku7094.azurecr.io/poi-jvr
+docker push registryhku7094.azurecr.io/poi-jvr
+
