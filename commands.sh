@@ -52,8 +52,22 @@ exit
 # Use the IP address to load the data into the DB
 docker run -d --name dataload --network bridge -e SQLFQDN=localhost -e SQLUSER=sa -e SQLPASS=MyStrongXYZPassw0rd123 -e SQLDB=mydrivingDB registryhku7094.azurecr.io/dataload:1.0
 
+## START Run containers
 # Run the API container
 docker run -d -p 8080:80 --name poi --network bridge -e SQL_SERVER=localhost -e SQL_USER=sa -e SQL_PASSWORD=MyStrongXYZPassw0rd123 -e SQL_DBNAME=mydrivingDB poi:latest -e ASPNETCORE_ENVIRONMENT=local
+
+# Run the trips container
+docker run -d --name trips --network bridge -e SQL_SERVER=localhost -e SQL_USER=sa -e SQL_PASSWORD=MyStrongXYZPassw0rd123 -e SQL_DBNAME=mydrivingDB trips:latest -e ASPNETCORE_ENVIRONMENT=local
+
+# Run the tripviewer container
+docker run -d --name tripviewer --network bridge -e TRIPS_API_ENDPOINT=http://localhost -e USERPROFILE_API_ENDPOINT=http://localhost tripviewer:latest -e ASPNETCORE_ENVIRONMENT=local
+
+# Run the user-java container
+docker run -d --name user-java --network bridge -e SQL_SERVER=localhost -e SQL_USER=sa -e SQL_PASSWORD=MyStrongXYZPassw0rd123 -e SQL_DBNAME=mydrivingDB user-java:latest -e ASPNETCORE_ENVIRONMENT=local
+
+# Run the userprofile container
+docker run -d --name userprofile --network bridge -e SQL_SERVER=localhost -e SQL_USER=sa -e SQL_PASSWORD=MyStrongXYZPassw0rd123 -e SQL_DBNAME=mydrivingDB userprofile:latest -e ASPNETCORE_ENVIRONMENT=local
+## END Run containers
 
 # Check if the API works
 curl -i -X GET 'http://localhost:8080/api/poi/healthcheck'
