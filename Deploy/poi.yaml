@@ -1,0 +1,56 @@
+- apiVersion: v1
+  kind: Service
+  metadata:
+  name: poi-lb
+  spec:
+    type: LoadBalancer
+    ports:
+      - port: 8080
+    selector:
+      app: poi
+
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: poi-deployment
+    labels:
+      app: poi
+  spec:
+    replicas: 2
+    selector:
+      matchLabels:
+        app: poi
+    template:
+      metadata:
+        labels:
+          app: poi
+      spec:
+        containers:
+          - name: poi
+            image: registryhku7094.azurecr.io/poi-jvr:latest
+            ports:
+              - containerPort: 80
+            resources:
+              requests:
+                memory: "64Mi"
+                cpu: "250m"
+              limits:
+                memory: "128Mi"
+                cpu: "500m"
+            env:
+              - name: SQL_SERVER
+                value: "sqlserverhku7094.database.windows.net"
+              - name: SQL_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: db-app-pass
+                    key: password
+              - name: SQL_DBNAME
+                value: "mydrivingDB"
+              - name: OPENAPI_DOCS_URI
+                value: "http://localhost"
+              - name: SQL_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: db-app-pass
+                    key: username
