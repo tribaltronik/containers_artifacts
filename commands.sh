@@ -11,11 +11,21 @@ az acr login --name registryhku7094
 # Build the app container
 cd src/poi
 docker build -t poi -f ..\..\dockerfiles\Dockerfile_3 .
-docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' poi
 
 # Create local SQL server container
 docker pull mcr.microsoft.com/mssql/server:2017-latest
 docker run -d --network bridge -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=MyStrongXYZPassw0rd123" -p 1433:1433 --name sql1 --hostname sql1 -d mcr.microsoft.com/mssql/server:2017-latest
+
+#
+# IMPORTANT!
+#
+# Depending on your setup, you're containers will be exposed over localhost to your machine.
+# If you're running these commands inside a devcontainer, localhost might not work.
+# You have to run any commands that involve localhost on your local machine OR use the IP address of the container
+# Find that with: 
+# docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' poi
+# for the IP address of the poi container
+#
 
 # Login to container
 docker exec -it sql1 /bin/bash
@@ -27,15 +37,11 @@ CREATE DATABASE mydrivingDB;
 GO
 exit
 
-# Get IP address of container
-docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' sql1
-
 # Use the IP address to load the data into the DB
-docker run -d --name dataload --network bridge -e SQLFQDN=172.17.0.3 -e SQLUSER=sa -e SQLPASS=MyStrongXYZPassw0rd123 -e SQLDB=mydrivingDB registryhku7094.azurecr.io/dataload:1.0
+docker run -d --name dataload --network bridge -e SQLFQDN=localhost -e SQLUSER=sa -e SQLPASS=MyStrongXYZPassw0rd123 -e SQLDB=mydrivingDB registryhku7094.azurecr.io/dataload:1.0
 
 # Run the API container
-docker run -d --name poi --network bridge -e SQL_SERVER=172.17.0.3 -e SQL_USER=sa -e SQL_PASSWORD=MyStrongXYZPassw0rd123 -e SQL_DBNAME=mydrivingDB poi:latest
-docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' poi
+docker run -d -p 8080:80 --name poi --network bridge -e SQL_SERVER=localhost -e SQL_USER=sa -e SQL_PASSWORD=MyStrongXYZPassw0rd123 -e SQL_DBNAME=mydrivingDB poi:latest
 
 # Check if the API works
-curl -i -X GET 'http://172.17.0.5:80'
+curl -i -X GET 'http://localhost:8080/api/poi/healthcheck'
