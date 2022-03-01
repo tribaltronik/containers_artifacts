@@ -54,19 +54,19 @@ docker run -d --name dataload --network bridge -e SQLFQDN=localhost -e SQLUSER=s
 
 ## START Run containers
 # Run the API container
-docker run -d -p 8080:80 --name poi --network bridge -e SQL_SERVER=localhost -e SQL_USER=sa -e SQL_PASSWORD=MyStrongXYZPassw0rd123 -e SQL_DBNAME=mydrivingDB poi:latest -e ASPNETCORE_ENVIRONMENT=local
+docker run -d -p 8080:80 --name poi --network bridge -e SQL_SERVER=localhost -e SQL_USER=sa -e SQL_PASSWORD=MyStrongXYZPassw0rd123 -e SQL_DBNAME=mydrivingDB -e ASPNETCORE_ENVIRONMENT=local poi:latest 
 
 # Run the trips container
-docker run -d --name trips --network bridge -e SQL_SERVER=localhost -e SQL_USER=sa -e SQL_PASSWORD=MyStrongXYZPassw0rd123 -e SQL_DBNAME=mydrivingDB trips:latest -e ASPNETCORE_ENVIRONMENT=local
+docker run -d -p 8081:80 --name trips --network bridge -e SQL_SERVER=localhost -e SQL_USER=sa -e SQL_PASSWORD=MyStrongXYZPassw0rd123 -e SQL_DBNAME=mydrivingDB -e OPENAPI_DOCS_URI=http://localhost trips:latest
 
 # Run the tripviewer container
-docker run -d --name tripviewer --network bridge -e TRIPS_API_ENDPOINT=http://localhost -e USERPROFILE_API_ENDPOINT=http://localhost tripviewer:latest -e ASPNETCORE_ENVIRONMENT=local
+docker run -d --name tripviewer --network bridge -e TRIPS_API_ENDPOINT=http://localhost:8081 -e USERPROFILE_API_ENDPOINT=http://localhost:8083 tripviewer:latest
 
 # Run the user-java container
-docker run -d --name user-java --network bridge -e SQL_SERVER=localhost -e SQL_USER=sa -e SQL_PASSWORD=MyStrongXYZPassw0rd123 -e SQL_DBNAME=mydrivingDB user-java:latest -e ASPNETCORE_ENVIRONMENT=local
+docker run -d -p 8082:80 --name user-java --network bridge -e SQL_SERVER=localhost -e SQL_USER=sa -e SQL_PASSWORD=MyStrongXYZPassw0rd123 -e SQL_DBNAME=mydrivingDB user-java:latest
 
 # Run the userprofile container
-docker run -d --name userprofile --network bridge -e SQL_SERVER=localhost -e SQL_USER=sa -e SQL_PASSWORD=MyStrongXYZPassw0rd123 -e SQL_DBNAME=mydrivingDB userprofile:latest -e ASPNETCORE_ENVIRONMENT=local
+docker run -d -p 8083:80 --name userprofile --network bridge -e SQL_SERVER=localhost -e SQL_USER=sa -e SQL_PASSWORD=MyStrongXYZPassw0rd123 -e SQL_DBNAME=mydrivingDB userprofile:latest
 ## END Run containers
 
 # Check if the API works
