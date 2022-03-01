@@ -12,6 +12,18 @@ az acr login --name registryhku7094
 cd src/poi
 docker build -t poi -f ..\..\dockerfiles\Dockerfile_3 .
 
+cd ../trips
+docker build -t trips -f ..\..\dockerfiles\Dockerfile_4 .
+
+cd ../tripviewer
+docker build -t tripviewer -f ..\..\dockerfiles\Dockerfile_1 .
+
+cd ../user-java
+docker build -t user-java -f ..\..\dockerfiles\Dockerfile_0 .
+
+cd ../userprofile
+docker build -t userprofile -f ..\..\dockerfiles\Dockerfile_2 .
+
 # Create local SQL server container
 docker pull mcr.microsoft.com/mssql/server:2017-latest
 docker run -d --network bridge -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=MyStrongXYZPassw0rd123" -p 1433:1433 --name sql1 --hostname sql1 -d mcr.microsoft.com/mssql/server:2017-latest
@@ -50,3 +62,4 @@ curl -i -X GET 'http://localhost:8080/api/poi/healthcheck'
 docker tag poi registryhku7094.azurecr.io/poi-jvr
 docker push registryhku7094.azurecr.io/poi-jvr
 
+# Build the other containers
