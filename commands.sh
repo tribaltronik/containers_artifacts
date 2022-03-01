@@ -10,19 +10,19 @@ az acr login --name registryhku7094
 
 # Build the app container
 cd src/poi
-docker build -t poi -f ..\..\dockerfiles\Dockerfile_3 .
+docker build -t poi --no-cache --build-arg IMAGE_VERSION="1.0" --build-arg IMAGE_CREATE_DATE="`date -u +"%Y-%m-%dT%H:%M:%SZ"`" --build-arg IMAGE_SOURCE_REVISION="`git rev-parse HEAD`" -f ../../dockerfiles/Dockerfile_3 .
 
 cd ../trips
-docker build -t trips -f ..\..\dockerfiles\Dockerfile_4 .
+docker build -t trips --no-cache --build-arg IMAGE_VERSION="1.0" --build-arg IMAGE_CREATE_DATE="`date -u +"%Y-%m-%dT%H:%M:%SZ"`" --build-arg IMAGE_SOURCE_REVISION="`git rev-parse HEAD`" -f ../../dockerfiles/Dockerfile_4 .
 
 cd ../tripviewer
-docker build -t tripviewer -f ..\..\dockerfiles\Dockerfile_1 .
+docker build -t tripviewer --no-cache --build-arg IMAGE_VERSION="1.0" --build-arg IMAGE_CREATE_DATE="`date -u +"%Y-%m-%dT%H:%M:%SZ"`" --build-arg IMAGE_SOURCE_REVISION="`git rev-parse HEAD`" -f ../../dockerfiles/Dockerfile_1 .
 
 cd ../user-java
-docker build -t user-java -f ..\..\dockerfiles\Dockerfile_0 .
+docker build -t user-java --no-cache --build-arg IMAGE_VERSION="1.0" --build-arg IMAGE_CREATE_DATE="`date -u +"%Y-%m-%dT%H:%M:%SZ"`" --build-arg IMAGE_SOURCE_REVISION="`git rev-parse HEAD`" -f ../../dockerfiles/Dockerfile_0 .
 
 cd ../userprofile
-docker build -t userprofile -f ..\..\dockerfiles\Dockerfile_2 .
+docker build -t userprofile --no-cache --build-arg IMAGE_VERSION="1.0" --build-arg IMAGE_CREATE_DATE="`date -u +"%Y-%m-%dT%H:%M:%SZ"`" --build-arg IMAGE_SOURCE_REVISION="`git rev-parse HEAD`" -f ../../dockerfiles/Dockerfile_2 .
 
 # Create local SQL server container
 docker pull mcr.microsoft.com/mssql/server:2017-latest
@@ -62,4 +62,15 @@ curl -i -X GET 'http://localhost:8080/api/poi/healthcheck'
 docker tag poi registryhku7094.azurecr.io/poi-jvr
 docker push registryhku7094.azurecr.io/poi-jvr
 
+docker tag trips registryhku7094.azurecr.io/trips-jvr
+docker push registryhku7094.azurecr.io/trips-jvr
+
+docker tag tripviewer registryhku7094.azurecr.io/tripviewer-jvr
+docker push registryhku7094.azurecr.io/tripviewer-jvr
+
+docker tag user-java registryhku7094.azurecr.io/user-java-jvr
+docker push registryhku7094.azurecr.io/user-java-jvr
+
+docker tag userprofile registryhku7094.azurecr.io/userprofile-jvr
+docker push registryhku7094.azurecr.io/userprofile-jvr
 # Build the other containers
