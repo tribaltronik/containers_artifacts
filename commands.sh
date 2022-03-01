@@ -71,6 +71,9 @@ docker run -d -p 8083:80 --name userprofile --network bridge -e SQL_SERVER=local
 
 # Check if the API works
 curl -i -X GET 'http://localhost:8080/api/poi/healthcheck'
+curl -i -X GET 'http://localhost:8081/api/trips/healthcheck'
+curl -i -X GET 'http://localhost:8082/api/user-java/healthcheck'
+curl -i -X GET 'http://localhost:8083/api/user/healthcheck'
 
 # Push to the container registry
 docker tag poi registryhku7094.azurecr.io/poi-jvr
