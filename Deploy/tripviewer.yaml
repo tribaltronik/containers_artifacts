@@ -1,15 +1,16 @@
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: tripviewer-lb
-# spec:
-#   type: LoadBalancer
-#   ports:
-#     - port: 8080
-#       targetPort: 80
-#   selector:
-#     app: tripviewer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tripviewer-lb
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: tripviewer
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -55,3 +56,7 @@ spec:
                 secretKeyRef:
                   name: sqldbaccess
                   key: username
+            - name: TRIPS_API_ENDPOINT
+              value: "http://trips-lb:8080"
+            - name: USERPROFILE_API_ENDPOINT
+              value: "http://userprofile-lb:8080"

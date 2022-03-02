@@ -101,9 +101,12 @@ az aks get-credentials --resource-group teamResources --name teamAKS
 
 
 # Create Kubernetes Secrets
+## Command line
 kubectl create secret docker-registry db-app-pass `
   --username=sqladminqNq8957 `
   --password=xxx 
+## Manifest
+kubectl apply -f Secrets.yaml
 
 # Deploy Services to AKS Cluster
 kubectl apply -f poi.yaml

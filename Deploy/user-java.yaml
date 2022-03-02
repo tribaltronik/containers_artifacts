@@ -28,15 +28,15 @@ spec:
     spec:
       containers:
         - name: user-java
-          image: registryhku7094.azurecr.io/user-java-jvr:latest
+          image: registryhku7094.azurecr.io/user-java-moka:latest
           ports:
             - containerPort: 80
           resources:
             requests:
-              memory: "64Mi"
+              memory: "256Mi"
               cpu: "250m"
             limits:
-              memory: "128Mi"
+              memory: "512Mi"
               cpu: "500m"
           env:
             - name: SQL_SERVER
@@ -48,8 +48,6 @@ spec:
                   key: password
             - name: SQL_DBNAME
               value: "mydrivingDB"
-            - name: OPENAPI_DOCS_URI
-              value: "http://localhost"
             - name: SQL_USER
               valueFrom:
                 secretKeyRef:
