@@ -3,6 +3,10 @@
 Fork Repo
 https://github.com/tribaltronik/containers_artifacts
 
+
+## Objectives
+
+
 # SQL Server
 
 You’ll need to authenticate to the registry first - reference the Azure Container Registry resource in the Azure portal for registry credentials.
