@@ -91,3 +91,19 @@ docker push registryhku7094.azurecr.io/user-java-jvr
 docker tag userprofile registryhku7094.azurecr.io/userprofile-jvr
 docker push registryhku7094.azurecr.io/userprofile-jvr
 # Build the other containers
+
+# Create AKS Cluster
+
+# Connect to AKS Cluster
+az account set --subscription 65c43cda-8cde-4186-977b-1ab83ec326c6
+az aks get-credentials --resource-group teamResources --name teamAKS
+
+# Deploy Services to AKS Cluster
+
+# Check Pod logs 
+kubectl logs -f poi-6c4d9d46f4-cd9ld
+
+# Enable port-forwarding for troubleshooting a service
+kubectl port-forward pods/poi-6c4d9d46f4-cd9ld 80:80
+
+
