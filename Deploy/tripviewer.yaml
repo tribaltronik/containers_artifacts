@@ -3,6 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: tripviewer-lb
+  namespace: web
 spec:
   type: LoadBalancer
   ports:
@@ -14,6 +15,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: web
   name: tripviewer
   labels:
     app: tripviewer

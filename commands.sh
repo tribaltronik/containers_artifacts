@@ -93,6 +93,23 @@ docker push registryhku7094.azurecr.io/userprofile-jvr
 # Build the other containers
 
 # Create AKS Cluster
+az aks create --resource-group TEAMRESOURCES `
+--name aks-oh10-ch3 `
+--enable-aad `
+--enable-azure-rbac `
+--attach-acr registryhku7094  `
+--generate-ssh-keys `
+--network-plugin azure `
+--aad-admin-group-object-ids "4218ac34-6dec-40e3-b5a8-20fb9c96ab48" `
+--vnet-subnet-id "/subscriptions/65c43cda-8cde-4186-977b-1ab83ec326c6/resourceGroups/teamResources/providers/Microsoft.Network/virtualNetworks/vnet/subnets/aks" `
+    --docker-bridge-address 172.17.0.1/16 `
+    --dns-service-ip 10.2.5.10 `
+    --service-cidr 10.2.5.0/24
+
+
+# Create namespaces
+kubectl create namespace api
+kubectl create namespace web
 
 # Connect to AKS Cluster
 az account set --subscription 65c43cda-8cde-4186-977b-1ab83ec326c6

@@ -13,6 +13,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: api
   name: poi
   labels:
     app: poi
