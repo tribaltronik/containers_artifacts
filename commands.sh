@@ -179,3 +179,12 @@ az role assignment list --scope /subscriptions/65c43cda-8cde-4186-977b-1ab83ec32
 
 $getroles= az role assignment list --all | ConvertFrom-Json
 $getroles | Out-GridView 
+
+
+
+## Add addon azure-keyvault-secrets-provider
+az aks enable-addons --addons azure-keyvault-secrets-provider --name aks-oh10-ch3 --resource-group teamResources
+
+
+## Enable managed identity
+az aks update -g teamResources -n aks-oh10-ch3 --enable-managed-identity 
