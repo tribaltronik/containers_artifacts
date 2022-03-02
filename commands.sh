@@ -98,13 +98,19 @@ docker push registryhku7094.azurecr.io/userprofile-jvr
 az account set --subscription 65c43cda-8cde-4186-977b-1ab83ec326c6
 az aks get-credentials --resource-group teamResources --name teamAKS
 
-# Deploy Services to AKS Cluster
+
 
 # Create Kubernetes Secrets
 kubectl create secret docker-registry db-app-pass `
   --username=sqladminqNq8957 `
-  --password=wD3or7Gl9 
- 
+  --password=xxx 
+
+# Deploy Services to AKS Cluster
+kubectl apply -f poi.yaml
+kubectl apply -f user-java.yaml
+kubectl apply -f userprofile.yaml
+kubectl apply -f trips.yaml
+kubectl apply -f tripviewer.yaml
 
 # Check Pod logs 
 kubectl logs -f poi-6c4d9d46f4-cd9ld
