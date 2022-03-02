@@ -139,3 +139,43 @@ kubectl logs -f poi-6c4d9d46f4-cd9ld
 kubectl port-forward pods/poi-6c4d9d46f4-cd9ld 80:80
 
 
+# Namespace Access using Azure RBAC
+## Web Dev Roles
+az role assignment create `
+  --assignee "webdev@msftopenhack7030ops.onmicrosoft.com" `
+  --role "Azure Kubernetes Service RBAC Reader" `
+    --scope "$(az aks show `
+        --resource-group TEAMRESOURCES `
+        --name aks-oh10-ch3 `
+        --query id -o tsv)/namespaces/api"
+
+az role assignment create `
+  --assignee "webdev@msftopenhack7030ops.onmicrosoft.com" `
+  --role "Azure Kubernetes Service RBAC Writer" `
+    --scope "$(az aks show `
+        --resource-group TEAMRESOURCES `
+        --name aks-oh10-ch3 `
+        --query id -o tsv)/namespaces/web"
+
+## API Dev Roles
+az role assignment create `
+  --assignee "apidev@msftopenhack7030ops.onmicrosoft.com" `
+  --role "Azure Kubernetes Service RBAC Reader" `
+    --scope "$(az aks show `
+        --resource-group TEAMRESOURCES `
+        --name aks-oh10-ch3 `
+        --query id -o tsv)/namespaces/web"
+
+az role assignment create `
+  --assignee "apidev@msftopenhack7030ops.onmicrosoft.com" `
+  --role "Azure Kubernetes Service RBAC Writer" `
+    --scope "$(az aks show `
+        --resource-group TEAMRESOURCES `
+        --name aks-oh10-ch3 `
+        --query id -o tsv)/namespaces/api"
+
+## List namespaces Azure RBAC roles
+az role assignment list --scope /subscriptions/65c43cda-8cde-4186-977b-1ab83ec326c6/resourcegroups/TEAMRESOURCES/providers/Microsoft.ContainerService/managedClusters/aks-oh10-ch3/namespaces/api
+
+$getroles= az role assignment list --all | ConvertFrom-Json
+$getroles | Out-GridView 

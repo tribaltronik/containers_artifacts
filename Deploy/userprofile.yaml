@@ -13,7 +13,6 @@ spec:
     app: userprofile
 ---
 apiVersion: apps/v1
-namespace: api
 kind: Deployment
 metadata:
   namespace: api
