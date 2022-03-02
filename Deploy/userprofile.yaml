@@ -2,33 +2,33 @@
 # apiVersion: v1
 # kind: Service
 # metadata:
-#   name: poi-lb
+#   name: userprofile-lb
 # spec:
 #   type: LoadBalancer
 #   ports:
 #     - port: 8080
 #       targetPort: 80
 #   selector:
-#     app: poi
+#     app: userprofile
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: poi
+  name: userprofile
   labels:
-    app: poi
+    app: userprofile
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: poi
+      app: userprofile
   template:
     metadata:
       labels:
-        app: poi
+        app: userprofile
     spec:
       containers:
-        - name: poi
-          image: registryhku7094.azurecr.io/poi-jvr:latest
+        - name: userprofile
+          image: registryhku7094.azurecr.io/userprofile-jvr:latest
           ports:
             - containerPort: 80
           resources:

@@ -2,33 +2,33 @@
 # apiVersion: v1
 # kind: Service
 # metadata:
-#   name: poi-lb
+#   name: tripviewer-lb
 # spec:
 #   type: LoadBalancer
 #   ports:
 #     - port: 8080
 #       targetPort: 80
 #   selector:
-#     app: poi
+#     app: tripviewer
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: poi
+  name: tripviewer
   labels:
-    app: poi
+    app: tripviewer
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: poi
+      app: tripviewer
   template:
     metadata:
       labels:
-        app: poi
+        app: tripviewer
     spec:
       containers:
-        - name: poi
-          image: registryhku7094.azurecr.io/poi-jvr:latest
+        - name: tripviewer
+          image: registryhku7094.azurecr.io/tripviewer-jvr:latest
           ports:
             - containerPort: 80
           resources:
