@@ -42,6 +42,8 @@ spec:
               memory: "128Mi"
               cpu: "500m"
           env:
+            - name: ASPNETCORE_ENVIRONMENT 
+              value: "Development"
             - name: SQL_SERVER
               value: "sqlserverhku7094.database.windows.net"
             - name: SQL_PASSWORD
