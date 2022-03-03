@@ -1,0 +1,27 @@
+# This is a SecretProviderClass example using system-assigned identity to access your key vault
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: azure-vaulttripinsights-system-msi
+  namespace: web
+spec:
+  provider: azure
+  parameters:
+    usePodIdentity: "false"
+    useVMManagedIdentity: "true" # Set to true for using managed identity
+    userAssignedIdentityID: "e0e08fee-0b56-46b1-b706-2b3511ad0349" # If empty, then defaults to use the system assigned identity on the VM
+    keyvaultName: vaultTripInsights
+    cloudName: "" # [OPTIONAL for Azure] if not provided, the Azure environment defaults to AzurePublicCloud
+    objects: |
+      array:
+        - |
+          objectName: SQLUSER
+          objectType: secret        # object types: secret, key, or cert
+          objectVersion: ""         # [OPTIONAL] object versions, default to latest if empty
+          objectAlias: SQL_USER
+        - |
+          objectName: SQLPASSWORD
+          objectType: secret
+          objectVersion: ""
+          objectAlias: SQL_PASSWORD
+    tenantId: a52ca535-47cb-45f6-b9bf-0ef1daaf089c # The tenant ID of the key vault

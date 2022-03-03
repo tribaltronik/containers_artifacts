@@ -179,3 +179,10 @@ az role assignment list --scope /subscriptions/65c43cda-8cde-4186-977b-1ab83ec32
 
 $getroles= az role assignment list --all | ConvertFrom-Json
 $getroles | Out-GridView 
+
+# Grant access for the Kubernetes cluster to the Keyvault with managed identity
+$mid=$(az aks show --resource-group teamresources --name aks-oh10-ch3 --query identityProfile.kubeletidentity.clientId -o tsv)
+
+az keyvault set-policy -n vaultTripInsights --key-permissions get --spn $mid
+az keyvault set-policy -n vaultTripInsights --secret-permissions get --spn $mid
+az keyvault set-policy -n vaultTripInsights --certificate-permissions get --spn $mid
