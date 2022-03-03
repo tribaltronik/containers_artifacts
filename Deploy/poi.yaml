@@ -1,15 +1,15 @@
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: poi-lb
-# spec:
-#   type: LoadBalancer
-#   ports:
-#     - port: 8080
-#       targetPort: 80
-#   selector:
-#     app: poi
+apiVersion: v1
+kind: Service
+metadata:
+  name: poi-lb
+  namespace: api
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+  selector:
+    app: poi
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -27,23 +27,11 @@ spec:
       labels:
         app: poi
     spec:
-      volumes:
-        - name: secrets-store01-inline
-          csi:
-            driver: secrets-store.csi.k8s.io
-            readOnly: true
-            volumeAttributes:
-              secretProviderClass: "azure-vaulttripinsights-system-msi"
-
       containers:
         - name: poi
           image: registryhku7094.azurecr.io/poi-jvr:latest
           ports:
             - containerPort: 80
-          volumeMounts:
-            - name: secrets-store01-inline
-              mountPath: "/mnt/secrets"
-              readOnly: true
           resources:
             requests:
               memory: "64Mi"
@@ -54,19 +42,17 @@ spec:
           env:
             - name: SQL_SERVER
               value: "sqlserverhku7094.database.windows.net"
-            - name: CONFIG_FILES_PATH
-              value: "/mnt/secrets"
-            # - name: SQL_PASSWORD
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: sqldbaccess
-            #       key: password
+            - name: SQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sqldbaccess
+                  key: password
             - name: SQL_DBNAME
               value: "mydrivingDB"
             - name: OPENAPI_DOCS_URI
               value: "http://localhost"
-            # - name: SQL_USER
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: sqldbaccess
-            #       key: username
+            - name: SQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: sqldbaccess
+                  key: username

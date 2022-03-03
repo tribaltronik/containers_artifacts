@@ -29,13 +29,6 @@ spec:
       labels:
         app: trips
     spec:
-      volumes:
-        - name: secrets-store01-inline
-          csi:
-            driver: secrets-store.csi.k8s.io
-            readOnly: true
-            volumeAttributes:
-              secretProviderClass: "azure-vaulttripinsights-system-msi"
       containers:
         - name: trips
           image: registryhku7094.azurecr.io/trips-jvr:latest
@@ -48,10 +41,6 @@ spec:
             limits:
               memory: "128Mi"
               cpu: "500m"
-          volumeMounts:
-            - name: secrets-store01-inline
-              mountPath: "/mnt/secrets"
-              readOnly: true
           env:
             - name: SQL_SERVER
               value: "sqlserverhku7094.database.windows.net"
@@ -60,14 +49,12 @@ spec:
                 secretKeyRef:
                   name: sqldbaccess
                   key: password
-            # - name: SQL_DBNAME
-            #   value: "mydrivingDB"
+            - name: SQL_DBNAME
+              value: "mydrivingDB"
             - name: OPENAPI_DOCS_URI
               value: "http://localhost"
-            - name: CONFIG_FILES_PATH
-              value: "/mnt/secrets"
-            # - name: SQL_USER
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: sqldbaccess
-            #       key: username
+            - name: SQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: sqldbaccess
+                  key: username

@@ -5,10 +5,9 @@ metadata:
   name: tripviewer-lb
   namespace: web
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - port: 80
-      targetPort: 80
   selector:
     app: tripviewer
 ---
@@ -42,8 +41,22 @@ spec:
               memory: "128Mi"
               cpu: "500m"
           env:
+            - name: SQL_SERVER
+              value: "sqlserverhku7094.database.windows.net"
+            - name: SQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sqldbaccess
+                  key: password
+            - name: SQL_DBNAME
+              value: "mydrivingDB"
             - name: OPENAPI_DOCS_URI
               value: "http://localhost"
+            - name: SQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: sqldbaccess
+                  key: username
             - name: TRIPS_API_ENDPOINT
               value: "http://trips-lb:8080"
             - name: USERPROFILE_API_ENDPOINT
