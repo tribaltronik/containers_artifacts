@@ -186,3 +186,4 @@ $mid=$(az aks show --resource-group teamresources --name aks-oh10-ch3 --query id
 az keyvault set-policy -n vaultTripInsights --key-permissions get --spn $mid
 az keyvault set-policy -n vaultTripInsights --secret-permissions get --spn $mid
 az keyvault set-policy -n vaultTripInsights --certificate-permissions get --spn $mid
+
